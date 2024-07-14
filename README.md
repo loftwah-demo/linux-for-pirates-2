@@ -3337,6 +3337,8 @@ export default defineConfig({
 
 This should automatically build and you will no longer see the deprecation warning.
 
+> Note: We translated the Vite configuration file from CommonJS (CJS) to ECMAScript Modules (ESM).
+
 ## Troubleshooting Errno::EACCES
 
 The error `Errno::EACCES` indicates that there is a permissions issue when trying to access a file or directory. In this case, it is related to the cache directory used by Sprockets. The specific file it is trying to access is `/home/loftwah/gits/dockerrails/pirate_app/tmp/cache/assets/sprockets/v4.0.0/2K/2Kqqs5CDZKeqQ8Zi3OcRThACYBsE09CB_YbQaG96080.cache`.
