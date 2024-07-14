@@ -3283,6 +3283,60 @@ This guide provides a comprehensive overview of upgrading your landing page to p
 
 > Note: There is still a warning in Tailwind but I can't figure it out yet.
 
+## Translating the Vite config to MJS
+
+The Rails plugin for Vite generates a `vite.config.ts` that has been [deprecated](https://github.com/ElMassimo/vite_ruby/issues/431). We are going to translate it and suggest a fix. 
+
+* Old `vite.config.ts`
+
+```typescript
+import { defineConfig } from 'vite'
+import RubyPlugin from 'vite-plugin-ruby'
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
+
+export default defineConfig({
+  plugins: [
+    RubyPlugin(),
+  ],
+  css: {
+    postcss: {
+      plugins: [
+        tailwindcss,
+        autoprefixer,
+      ],
+    },
+  },
+  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg'],
+})
+```
+
+* Update to the new `vite.config.mjs` and remove the old config
+
+```javascript
+import { defineConfig } from 'vite';
+import RubyPlugin from 'vite-plugin-ruby';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
+
+export default defineConfig({
+  plugins: [
+    RubyPlugin(),
+  ],
+  css: {
+    postcss: {
+      plugins: [
+        tailwindcss,
+        autoprefixer,
+      ],
+    },
+  },
+  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg'],
+});
+```
+
+This should automatically build and you will no longer see the deprecation warning.
+
 ## Troubleshooting Errno::EACCES
 
 The error `Errno::EACCES` indicates that there is a permissions issue when trying to access a file or directory. In this case, it is related to the cache directory used by Sprockets. The specific file it is trying to access is `/home/loftwah/gits/dockerrails/pirate_app/tmp/cache/assets/sprockets/v4.0.0/2K/2Kqqs5CDZKeqQ8Zi3OcRThACYBsE09CB_YbQaG96080.cache`.
