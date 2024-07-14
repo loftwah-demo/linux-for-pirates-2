@@ -3283,61 +3283,74 @@ This guide provides a comprehensive overview of upgrading your landing page to p
 
 > Note: There is still a warning in Tailwind but I can't figure it out yet.
 
-## Translating the Vite config to MJS
+## Updating package.json to Fix Deprecation Warning
 
-The Rails plugin for Vite generates a `vite.config.ts` that has been [deprecated](https://github.com/ElMassimo/vite_ruby/issues/431). We are going to translate it and suggest a fix. 
+The Rails plugin for Vite generates a `vite.config.ts` that has been [deprecated](https://github.com/ElMassimo/vite_ruby/issues/431). Instead of translating the configuration file, updating the `package.json` can resolve the deprecation warning.
 
-* Old `vite.config.ts`
+### Original package.json
 
-```typescript
-import { defineConfig } from 'vite'
-import RubyPlugin from 'vite-plugin-ruby'
-import tailwindcss from 'tailwindcss'
-import autoprefixer from 'autoprefixer'
-
-export default defineConfig({
-  plugins: [
-    RubyPlugin(),
-  ],
-  css: {
-    postcss: {
-      plugins: [
-        tailwindcss,
-        autoprefixer,
-      ],
-    },
+```json
+{
+  "name": "pirate_app",
+  "version": "1.0.0",
+  "description": "This README would normally document whatever steps are necessary to get the application up and running.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
   },
-  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg'],
-})
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "autoprefixer": "^10.4.19",
+    "my-private-npm-package": "git+https://github.com/loftwah-demo/my-private-npm-package.git",
+    "tailwindcss": "^3.4.4"
+  },
+  "devDependencies": {
+    "vite": "^5.3.3",
+    "vite-plugin-ruby": "^5.0.0"
+  }
+}
 ```
 
-* Update to the new `vite.config.mjs` and remove the old config
+### Updated package.json
 
-```javascript
-import { defineConfig } from 'vite';
-import RubyPlugin from 'vite-plugin-ruby';
-import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
+To resolve the deprecation warning, add `"type": "module"` to your `package.json`.
 
-export default defineConfig({
-  plugins: [
-    RubyPlugin(),
-  ],
-  css: {
-    postcss: {
-      plugins: [
-        tailwindcss,
-        autoprefixer,
-      ],
-    },
+```json
+{
+  "name": "pirate_app",
+  "version": "1.0.0",
+  "description": "This README would normally document whatever steps are necessary to get the application up and running.",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
   },
-  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg'],
-});
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "autoprefixer": "^10.4.19",
+    "my-private-npm-package": "git+https://github.com/loftwah-demo/my-private-npm-package.git",
+    "tailwindcss": "^3.4.4"
+  },
+  "devDependencies": {
+    "vite": "^5.3.3",
+    "vite-plugin-ruby": "^5.0.0"
+  }
+}
 ```
 
-This should automatically build and you will no longer see the deprecation warning.
-
-> Note: We translated the Vite configuration file from CommonJS (CJS) to ECMAScript Modules (ESM).
+Enabling `"type": "module"` in `package.json` resolves the CJS deprecation warning.
 
 ## Troubleshooting Errno::EACCES
 
