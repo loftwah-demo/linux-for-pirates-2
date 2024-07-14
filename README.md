@@ -3055,12 +3055,110 @@ I haven't thought of the following or where to put them yet.
 
 ## Upgrading the Landing Page for "Linux for Pirates! 2 - Ruby on Whales" Book Promotion
 
-### Step 1: Organize Your Project Structure
+I had to change the application JavaScript to import the stylesheet.
 
-Ensure your project structure under `app/frontend` looks like this:
+```javascript
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+import '../stylesheets/application.css'
+// To see this message, add the following to the `<head>` section in your
+// views/layouts/application.html.erb
+//
+//    <%= vite_client_tag %>
+//    <%= vite_javascript_tag 'application' %>
+console.log('Vite ⚡️ Rails')
+
+// If using a TypeScript entrypoint file:
+//     <%= vite_typescript_tag 'application' %>
+//
+// If you want to use .jsx or .tsx, add the extension:
+//     <%= vite_javascript_tag 'application.jsx' %>
+
+console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify.app/guide/rails')
+
+// Example: Load Rails libraries in Vite.
+//
+// import * as Turbo from '@hotwired/turbo'
+// Turbo.start()
+//
+// import ActiveStorage from '@rails/activestorage'
+// ActiveStorage.start()
+//
+// // Import all channels.
+// const channels = import.meta.globEager('./**/*_channel.js')
+
+// Example: Import a stylesheet in app/frontend/index.css
+// import '~/index.css'
+```
+
+I commented out everything in `app/javascript/application.js`.
+
+```javascript
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+// import "@hotwired/turbo-rails"
+// import "controllers"
+// import './stylesheets/application.css'
+```
+
+Add PostCSS configuration:
+
+```javascript
+// postcss.config.js
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+```
+
+Add Vite configuration with PostCSS plugins:
+
+```javascript
+// vite.config.ts
+import { defineConfig } from 'vite'
+import RubyPlugin from 'vite-plugin-ruby'
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
+
+export default defineConfig({
+  plugins: [
+    RubyPlugin(),
+  ],
+  css: {
+    postcss: {
+      plugins: [
+        tailwindcss,
+        autoprefixer,
+      ],
+    },
+  },
+  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg'],
+})
+```
+
+In development, I set the following configurations:
+
+```ruby
+# config/environments/development.rb
+config.assets.quiet = false
+config.assets.debug = true
+```
+
+The following stylesheet was missing and added:
 
 ```css
-app/frontend
+/* pirate_app/app/javascript/stylesheets/application.css */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+```
+
+### Step 1: Organise Your Project Structure
+
+Ensure your project structure under `app/javascript` looks like this:
+
+```plaintext
+app/javascript
 ├── images
 │   ├── logo.png
 │   ├── favicon.png
@@ -3076,7 +3174,7 @@ app/frontend
 
 ### Step 2: Add Images
 
-Place your images (e.g., logo, favicon, social banner) in the `app/frontend/images` directory.
+Place your images (e.g., logo, favicon, social banner) in the `app/javascript/images` directory.
 
 ### Step 3: Update Vite Configuration
 
@@ -3097,10 +3195,83 @@ export default defineConfig({
 
 ### Step 4: Update Rails Layout
 
+Update your application layout to include Vite tags and Open Graph meta tags.
 
+```erb
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PirateApp</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+  <%= vite_client_tag %>
+  <%= vite_javascript_tag 'application' %>
 
-### Step 7: Testing and Deployment
+  <!-- Open Graph meta tags -->
+  <meta property="og:title" content="Linux for Pirates! 2 - Ruby on Whales" />
+  <meta property="og:description" content="Embark on a Ruby adventure with Linux for Pirates! 2 - Ruby on Whales. Learn Ruby and conquer the seas!" />
+  <meta property="og:image" content="<%= vite_asset_url 'images/pirate-adventure.png' %>" />
+  <meta property="og:url" content="<%= request.original_url %>" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+
+<body class="bg-blue-900 text-white">
+  <header class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">PirateApp</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="/" class="hover:text-yellow-500">Home</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <%= yield %>
+  <footer class="bg-gray-800 p-4 mt-10">
+    <div class="container mx-auto text-center">
+      <p>&copy; 2024 PirateApp. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
+```
+
+### Step 5: Update Your View
+
+Update your view to include image tags and debug information.
+
+```erb
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PirateApp</title>
+</head>
+<body>
+  <h1>Home</h1>
+  <p>Linux for Pirates! 2 - Ruby on Whales</p>
+  <p>Embark on a Ruby adventure with Linux for Pirates! 2 - Ruby on Whales. Learn Ruby and conquer the seas!</p>
+
+  <!-- Print the asset path for debugging -->
+  <p>Image Path: <%= vite_asset_path('images/book-cover.jpg') %></p>
+  <p>Image Path: <%= vite_asset_path('images/pirate-adventure.png') %></p>
+
+  <!-- Display the images -->
+  <%= image_tag vite_asset_path('images/book-cover.jpg') %>
+  <%= image_tag vite_asset_path('images/pirate-adventure.png') %>
+
+  <footer>
+    <p>Pirate Adventure</p>
+    <a href="#">Get Started</a>
+    <p>© 2024 PirateApp. All rights reserved.</p>
+  </footer>
+</body>
+</html>
+```
+
+### Step 6: Testing and Deployment
 
 Run your Rails server and test the page locally to ensure everything is working as expected. When you’re ready, deploy your application.
 
@@ -3109,6 +3280,8 @@ rails server
 ```
 
 This guide provides a comprehensive overview of upgrading your landing page to promote "Linux for Pirates! 2 - Ruby on Whales" using Vite in a Rails application.
+
+> Note: There is still a warning in Tailwind but I can't figure it out yet.
 
 ## Troubleshooting Errno::EACCES
 
