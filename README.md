@@ -3052,6 +3052,159 @@ I haven't thought of the following or where to put them yet.
 * deployment instructions
 * pointing a domain at the application with cloudflare for secure connection
 
+## Upgrading the Landing Page for "Linux for Pirates! 2 - Ruby on Whales" Book Promotion
+
+### Step 1: Organize Your Project Structure
+
+Ensure your project structure under `app/frontend` looks like this:
+
+```css
+app/frontend
+├── images
+│   ├── logo.png
+│   ├── favicon.png
+│   └── social-banner.png
+├── entrypoints
+│   ├── application.js
+│   ├── application.css
+│   └── main.js
+├── styles
+│   └── main.css
+└── index.html
+```
+
+### Step 2: Add Images
+
+Place your images (e.g., logo, favicon, social banner) in the `app/frontend/images` directory.
+
+### Step 3: Update Vite Configuration
+
+Ensure your `vite.config.ts` is set up correctly:
+
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite'
+import RubyPlugin from 'vite-plugin-ruby'
+
+export default defineConfig({
+  plugins: [
+    RubyPlugin(),
+  ],
+  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg'],
+})
+```
+
+### Step 4: Update HTML Structure
+
+Create or update your `index.html` file in the `app/frontend` directory to include the necessary meta tags for Open Graph and favicon.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linux for Pirates! 2 - Ruby on Whales</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= vite_client_tag %>
+
+  <%= vite_stylesheet_tag 'application' %>
+
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="Linux for Pirates! 2 - Ruby on Whales">
+  <meta property="og:description" content="Join the ultimate pirate-themed adventure on the high seas with Ruby on Whales!">
+  <meta property="og:image" content="<%= vite_asset_url 'images/social-banner.png' %>">
+  <meta property="og:url" content="https://yourwebsite.com">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="<%= vite_asset_path 'images/favicon.png' %>">
+</head>
+<body>
+  <div class="min-h-screen bg-blue-900 flex items-center justify-center">
+    <div class="max-w-2xl bg-gray-800 text-white p-10 rounded-lg shadow-lg">
+      <h1 class="text-5xl font-bold mb-4 text-center">Ahoy, Matey!</h1>
+      <p class="text-xl mb-6 text-center">Welcome to Pirate App, the ultimate pirate-themed adventure on the high seas!</p>
+      
+      <div class="text-center">
+        <a href="#get-started" class="bg-yellow-500 text-black font-bold py-2 px-4 rounded hover:bg-yellow-600">Get Started</a>
+      </div>
+    </div>
+  </div>
+
+  <%= vite_javascript_tag 'application' %>
+</body>
+</html>
+```
+
+### Step 5: Add Styling and Script
+
+Update or create your CSS and JavaScript files in the `app/frontend/entrypoints` directory.
+
+#### main.css
+
+```css
+/* app/frontend/styles/main.css */
+body {
+  font-family: 'Pirata One', cursive;
+}
+
+h1 {
+  font-size: 5rem;
+  color: #ffdd00;
+}
+
+p {
+  font-size: 1.5rem;
+}
+
+a {
+  transition: background-color 0.3s ease;
+}
+```
+
+#### main.js
+
+```javascript
+// app/frontend/entrypoints/main.js
+import '../styles/main.css';
+
+// Additional JS can be added here if needed
+```
+
+### Step 6: Update Rails Layout
+
+Ensure your Rails layout file includes Vite helpers and references the entrypoints.
+
+```erb
+<!-- app/views/layouts/application.html.erb -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Linux for Pirates! 2 - Ruby on Whales</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= vite_client_tag %>
+
+  <%= vite_stylesheet_tag 'main' %>
+</head>
+<body>
+  <%= yield %>
+
+  <%= vite_javascript_tag 'main' %>
+</body>
+</html>
+```
+
+### Step 7: Testing and Deployment
+
+Run your Rails server and test the page locally to ensure everything is working as expected. When you’re ready, deploy your application.
+
+```bash
+rails server
+```
+
+This guide provides a comprehensive overview of upgrading your landing page to promote "Linux for Pirates! 2 - Ruby on Whales" using Vite in a Rails application.
 
 ## Troubleshooting Errno::EACCES
 
