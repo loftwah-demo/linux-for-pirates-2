@@ -3053,6 +3053,23 @@ I haven't thought of the following or where to put them yet.
 * pointing a domain at the application with cloudflare for secure connection
 * vite-rails using deprecated CJS [here](https://github.com/ElMassimo/vite_ruby/issues/431)
 
+## Load Testing
+
+* Stress (Linux)
+
+  A simple command-line tool to impose load on the system's CPU, memory, and disk I/O.
+  Application: Useful for stress testing the server infrastructure to observe system behavior under high load.
+
+* Loadster (Service)
+
+  A cloud-based load testing service that simulates user traffic from multiple locations.
+  Application: Effective for testing the performance and scalability of web applications under real-world usage patterns.
+
+* k6 (Grafana Labs)
+
+  A modern load testing tool using JavaScript to write test scripts, integrated with Grafana for monitoring.
+  Application: Ideal for continuous performance testing and monitoring, with the ability to integrate into CI/CD pipelines for automated testing.
+
 ## Upgrading the Landing Page for "Linux for Pirates! 2 - Ruby on Whales" Book Promotion
 
 I had to change the application JavaScript to import the stylesheet.
