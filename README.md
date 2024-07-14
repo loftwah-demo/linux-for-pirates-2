@@ -1,6 +1,7 @@
 # Linux for Pirates! Ruby on Whales
 
-<image>
+![DevOps with Docker, Ruby on Rails and Linux for Pirates!](https://github.com/user-attachments/assets/2732a87d-2b4f-421a-9828-ab31f8ab9156)
+
 
 ## Introduction
 
