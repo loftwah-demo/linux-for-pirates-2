@@ -2321,13 +2321,9 @@ services:
       POSTGRES_DB: pirate_app_production
       POSTGRES_USER: pirate_app
       POSTGRES_PASSWORD: ${PIRATE_APP_DATABASE_PASSWORD}
-    ports:
-      - "5432:5432"
 
   redis:
     image: redis:7
-    ports:
-      - "6379:6379"
 
   web:
     build: .
@@ -2335,7 +2331,7 @@ services:
     volumes:
       - .:/rails
     ports:
-      - "3000:3000"
+      - "80:3000"
     environment:
       RAILS_ENV: production
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
